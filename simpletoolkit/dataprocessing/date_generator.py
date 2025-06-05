@@ -24,8 +24,8 @@ class DateGeneratorTool(BaseTool):
         self._date_format = date_format
         self._start_date = str(start_date) if start_date else None
         self._end_date = str(end_date) if end_date else None
-        self._start_date_obj = None
-        self._end_date_obj = None
+        self._parsed_start_date = None
+        self._parsed_end_date = None
         self._enable_log = enable_log
 
         if start_date and end_date:
@@ -63,24 +63,24 @@ class DateGeneratorTool(BaseTool):
     def _init_date_objects(self):
         """初始化日期对象"""
         try:
-            self._start_date_obj = datetime.strptime(self._start_date, self._date_format)
-            self._end_date_obj = datetime.strptime(self._end_date, self._date_format)
+            self._parsed_start_date = datetime.strptime(self._start_date, self._date_format)
+            self._parsed_end_date = datetime.strptime(self._end_date, self._date_format)
         except ValueError as e:
             self._logger.error(f"日期格式错误: {e}")
             raise
 
     def generate_date_range(self):
         """生成从开始到结束的连续日期列表"""
-        if not self._start_date_obj or not self._end_date_obj:
+        if not self._parsed_start_date or not self._parsed_end_date:
             raise ValueError("请先设置开始日期和结束日期")
 
         if self._enable_log:
             self._logger.info("生成连续日期列表")
 
         date_list = []
-        current_date = self._start_date_obj
+        current_date = self._parsed_start_date
 
-        while current_date <= self._end_date_obj:
+        while current_date <= self._parsed_end_date:
             date_list.append(current_date.strftime(self._date_format))
             current_date += timedelta(days=1)
 
@@ -97,7 +97,7 @@ class DateGeneratorTool(BaseTool):
         Returns:
             日期范围列表，每个元素为 [开始日期, 结束日期] 或 [开始, 当月最后, 下月第一]
         """
-        if not self._start_date_obj or not self._end_date_obj:
+        if not self._parsed_start_date or not self._parsed_end_date:
             raise ValueError("请先设置开始日期和结束日期")
 
         if self._enable_log:
@@ -105,14 +105,14 @@ class DateGeneratorTool(BaseTool):
             self._logger.info(f"生成按月划分的日期范围列表 ({mode}格式)")
 
         date_list = []
-        current_date = self._start_date_obj
+        current_date = self._parsed_start_date
 
-        while current_date <= self._end_date_obj:
+        while current_date <= self._parsed_end_date:
             next_month_start = current_date.replace(day=1) + timedelta(days=32)
             next_month_start = next_month_start.replace(day=1)  # 获取下个月的第一天
 
-            if next_month_start > self._end_date_obj:
-                next_month_start = self._end_date_obj + timedelta(days=1)
+            if next_month_start > self._parsed_end_date:
+                next_month_start = self._parsed_end_date + timedelta(days=1)
 
             month_end = next_month_start - timedelta(days=1)  # 获取当月最后一天
 
@@ -145,7 +145,7 @@ class DateGeneratorTool(BaseTool):
         Returns:
             日期范围列表
         """
-        if not self._start_date_obj or not self._end_date_obj:
+        if not self._parsed_start_date or not self._parsed_end_date:
             raise ValueError("请先设置开始日期和结束日期")
 
         if interval_days <= 0:
@@ -156,13 +156,13 @@ class DateGeneratorTool(BaseTool):
             self._logger.info(f"生成按{interval_days}天划分的日期范围列表 ({mode}格式)")
 
         date_list = []
-        current_date = self._start_date_obj
+        current_date = self._parsed_start_date
 
-        while current_date <= self._end_date_obj:
+        while current_date <= self._parsed_end_date:
             next_date = current_date + timedelta(days=interval_days)
 
-            if next_date > self._end_date_obj:
-                next_date = self._end_date_obj + timedelta(days=1)
+            if next_date > self._parsed_end_date:
+                next_date = self._parsed_end_date + timedelta(days=1)
 
             period_end = next_date - timedelta(days=1)  # 周期的最后一天
 
@@ -185,16 +185,16 @@ class DateGeneratorTool(BaseTool):
 
     def generate_hourly_range(self):
         """生成按小时划分的时间范围列表"""
-        if not self._start_date_obj or not self._end_date_obj:
+        if not self._parsed_start_date or not self._parsed_end_date:
             raise ValueError("请先设置开始日期和结束日期")
 
         if self._enable_log:
             self._logger.info("生成按小时划分的时间范围列表")
 
         date_list = []
-        current_date = self._start_date_obj
+        current_date = self._parsed_start_date
 
-        while current_date <= self._end_date_obj:
+        while current_date <= self._parsed_end_date:
             date_list.append(current_date.strftime(self._date_format))
             current_date += timedelta(hours=1)
 

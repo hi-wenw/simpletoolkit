@@ -1,8 +1,8 @@
 from .base.base_tool import BaseTool
 from .filesystems.csv_tools import CSVTool
 from .filesystems.excel_tools import ExcelTool
-from .cloud.huawei.obs_tools import HuaweiOBSTool
 from .apis.tencent.image_search import TencentImageSearchTool
+from .apis.huawei.obs_tools import HuaweiOBSTool
 from .dataprocessing.text_processing import TextProcessingTool
 from .dataprocessing.date_generator import DateGeneratorTool
 
@@ -15,9 +15,6 @@ class SimpleToolkit:
     def __init__(self):
         # 文件系统工具
         self.filesystem = FileSystemTools()
-
-        # 云服务工具
-        self.cloud = CloudTools()
 
         # API集成工具
         self.apis = APITools()
@@ -52,28 +49,22 @@ class FileSystemTools(ToolContainer):
         self.excel = ExcelTool()
 
 
-# 云服务工具容器
-class CloudTools(ToolContainer):
-    def __init__(self):
-        self.huawei = HuaweiCloudTools()
-
-
-# 华为云工具容器
-class HuaweiCloudTools(ToolContainer):
-    def __init__(self):
-        self.obs = HuaweiOBSTool()
-
-
 # API工具容器
 class APITools(ToolContainer):
     def __init__(self):
         self.tencent = TencentAPITools()
+        self.huawei = HuaweiAPITools()
 
 
 # 腾讯API工具容器
 class TencentAPITools(ToolContainer):
     def __init__(self):
         self.image_search = TencentImageSearchTool()
+
+# 华为API工具容器
+class HuaweiAPITools(ToolContainer):
+    def __init__(self):
+        self.obs = HuaweiOBSTool()
 
 
 # 数据处理工具容器

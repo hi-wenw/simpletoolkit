@@ -1,7 +1,7 @@
 import os
 from typing import Optional
 
-from ...base.base_tool import BaseTool
+from simpletoolkit.base.base_tool import BaseTool
 from obs import ObsClient
 
 # 环境变量提示信息
@@ -98,44 +98,6 @@ class HuaweiOBSTool(BaseTool):
         if self._obs_client is None:
             self._init_obs_client()
         return self._obs_client
-
-    @staticmethod
-    def upload_csv(bucket_name: str, file_path: str, object_key: str, delete_existing: bool = True) -> bool:
-        """
-        上传CSV文件到OBS，可选择是否删除已存在的同名文件
-
-        Args:
-            bucket_name: OBS存储桶名称
-            file_path: 本地CSV文件路径
-            object_key: OBS对象键
-            delete_existing: 是否删除已存在的文件，默认为True
-        """
-        # 获取单例实例并执行上传
-        instance = HuaweiOBSTool.get_instance()
-
-        try:
-            # 删除已存在的文件（如果需要）
-            if delete_existing:
-                delete_resp = instance.obs_client.deleteObject(bucket_name, object_key)
-                if delete_resp.status < 300:
-                    instance._logger.info(f"已删除现有文件: {object_key}")
-                else:
-                    instance._logger.warning(f"删除现有文件失败或文件不存在: {object_key}")
-
-            # 上传新文件
-            up_resp = instance.obs_client.putFile(bucket_name, object_key, file_path)
-
-            # 检查上传结果
-            if up_resp.status < 300:
-                instance._logger.info(f"CSV文件上传成功 - 对象键: {object_key}")
-                return True
-            else:
-                instance._logger.error(f"CSV文件上传失败 - 状态码: {up_resp.status}")
-                return False
-
-        except Exception as e:
-            instance._logger.error(f"CSV文件上传异常: {str(e)}")
-            raise
 
     def upload_file(self, local_path: str, bucket_name: str, object_key: str, **options) -> bool:
         """上传文件到OBS"""
