@@ -1,0 +1,12 @@
+# 构建产物
+dist/
+build/
+*.egg-info/
+
+# Python缓存
+__pycache__/
+*.pyc
+
+# 环境
+.venv/
+env/
