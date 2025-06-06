@@ -71,7 +71,7 @@ class HuaweiAPITools(ToolContainer):
 class DataProcessingTools(ToolContainer):
     def __init__(self):
         self.text = TextProcessingTool()
-        self.datetime = DateGeneratorTool()
+        self.date_generator = DateGeneratorTool()
 
 
 # 创建工具包实例的工厂函数

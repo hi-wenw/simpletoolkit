@@ -5,7 +5,7 @@ from simpletoolkit.base.base_tool import BaseTool
 from obs import ObsClient
 
 # 环境变量提示信息
-ENV_VARIABLE_HINT = "请确保已正确配置环境变量 'CLOUD_SDK_AK', 'CLOUD_SDK_SK' 和 'HUAWEI_REGION'。"
+ENV_VARIABLE_HINT = "请确保已正确配置环境变量 'HUAWEI_CLOUD_AK', 'HUAWEI_CLOUD_SK' 和 'HUAWEI_REGION'。"
 
 
 class HuaweiOBSTool(BaseTool):
@@ -48,8 +48,8 @@ class HuaweiOBSTool(BaseTool):
                   region: Optional[str] = None) -> 'HuaweiOBSTool':
         """配置华为云认证信息（支持链式调用）"""
         # 按优先级设置配置：参数 > 已有配置 > 环境变量 > 默认值
-        self._access_key = access_key or self._access_key or os.getenv('CLOUD_SDK_AK')
-        self._secret_key = secret_key or self._secret_key or os.getenv('CLOUD_SDK_SK')
+        self._access_key = access_key or self._access_key or os.getenv('HUAWEI_CLOUD_AK')
+        self._secret_key = secret_key or self._secret_key or os.getenv('HUAWEI_CLOUD_SK')
         self._region = region or self._region or os.getenv('HUAWEI_REGION', 'cn-south-1')
 
         # 更新服务器地址
